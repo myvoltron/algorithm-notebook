@@ -7,26 +7,38 @@ t = int(input().rstrip())
 
 while t > 0:
     k = int(input().rstrip())
-    pq = []
-    while k > 0:
+    max_heap = []
+    min_heap = []
+    visited = [False] * k
+
+    for i in range(k):
         oper = input().rstrip().split()
         if oper[0] == "I":
-            heapq.heappush(pq, int(oper[1]))
+            v = int(oper[1])
+            heapq.heappush(max_heap, (v * -1, i))
+            heapq.heappush(min_heap, (v, i))
+            visited[i] = True
         else:
-            if not pq:
-                k -= 1
-                continue
-
             if oper[1] == "1":
-                pq.sort()
-                pq.pop()
+                while max_heap and not visited[max_heap[0][1]]:
+                    heapq.heappop(max_heap)
+                if max_heap:
+                    v = heapq.heappop(max_heap)
+                    visited[v[1]] = False
             else:
-                heapq.heappop(pq)
-        k -= 1
+                while min_heap and not visited[min_heap[0][1]]:
+                    heapq.heappop(min_heap)
+                if min_heap:
+                    v = heapq.heappop(min_heap)
+                    visited[v[1]] = False
 
-    if not pq:
+    while max_heap and not visited[max_heap[0][1]]:
+        heapq.heappop(max_heap)
+    while min_heap and not visited[min_heap[0][1]]:
+        heapq.heappop(min_heap)
+
+    if not max_heap and not min_heap:
         print("EMPTY")
     else:
-        print(f"{pq[-1]} {pq[0]}")
-
+        print(f"{max_heap[0][0] * -1} {min_heap[0][0]}")
     t -= 1
