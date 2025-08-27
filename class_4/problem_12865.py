@@ -1,18 +1,23 @@
 import sys
-from collections import deque
 
 input = sys.stdin.readline
 
 n, k = map(int, input().split())
 
-graph = []
+weights = []
+values = []
 for i in range(n):
     weight, value = map(int, input().split())
-    graph.append((weight, value))
+    weights.append(weight)
+    values.append(value)
 
-result = -1
-for start in range(n):
-    q = deque([(start, graph[start][0], graph[start][1], [start])])
+dp = [[0] * (k + 1) for _ in range(n + 1)]
 
-    while q:
-        v = q.popleft()
+for i in range(1, n + 1):
+    w, v = weights[i - 1], values[i - 1]
+    for k in range(k + 1):
+        dp[i][k] = dp[i - 1][k]
+        if k >= w:
+            dp[i][k] = max(dp[i][k], dp[i - 1][k - w] + v)
+
+print(dp[n][k])
