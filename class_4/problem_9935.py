@@ -1,15 +1,17 @@
 x = input()
-y = input()
+y = list(input())
 
-length = len(x)
+length = len(y)
 
-while length > 0:
-    x = "".join(x.split(y))
-    if length == len(x):
-        break
-    length = len(x)
+stack = []
+for c in x:
+    stack.append(c)
 
-if length == 0:
+    if stack[-length:] == y:
+        for _ in range(length):
+            stack.pop()
+
+if len(stack) == 0:
     print("FRULA")
 else:
-    print(x)
+    print("".join(stack))
